@@ -1,0 +1,1796 @@
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+
+
+
+  ui.createMenu('Get Messari Data')
+      .addItem('Get Nervos Data','nervos_dev')
+      .addItem('Get Handshake Data','handshake_dev',)
+      .addItem('Get Bitcoin Data','bitcoin_dev')
+      .addItem('Get Ethereum Data','ethereum_dev')
+      .addItem('Get Cardano Data','cardano_dev')
+      .addItem('Get Polkadot Data','polkadot_dev')
+      .addItem('Get Nem Data','nem_dev')
+      .addItem('Get Comos Data','comos_dev')
+      .addItem('Get Solana Data','solana_dev')
+      .addItem('Get Eos Data','eos_dev')
+      .addItem('Get Tron Data','tron_dev')
+      .addItem('Get Neo Data', 'neo_dev')
+      .addItem('Get Tezos Data', 'tezos_dev')
+      .addItem('Get VeChain Data', 'vechain_dev')
+      .addItem('Get Avalanche Data', 'avalanche_dev')
+      .addItem('Get Kusama Data', 'kusama_dev')
+      .addItem('Get Algorand Data', 'algorand_dev')
+      .addItem('Get Elrond Data', 'elrond_dev')
+      .addItem('Get Ethereum Classic Data', 'classic_dev')
+      .addToUi();
+
+//displays a welcome message
+
+  Browser.msgBox("Welcome Message and Instructions", "Welcome to the Developer Activity Sheet. \\n \\n The purpose of this spreadsheet is to track developer activity on the top 15 smart contract platforms (as of 02-23-2021) plus Ethereum Classic as well as 3 of our assets: Nervos, Handshake and Bitcoin. \\n \\n Here are a few instructions: \\n \\n 1. This data is automatically set to update daily.\\n \\n 2. Incase it does not, click on 'Get Messari Data' to select the different developer activity data sorted in descending order by date.   \\n \\n 3. Get the data that corresponds to the worksheet that you are currently on. \\n \\n 4. The data is retreived from Messari's website. \\n \\n 5. Messari does not have data on some of these projects. ", Browser.Buttons.OK)
+
+}
+
+
+
+function nervos_dev() {
+// This function retreives nervos' developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/ckb/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Nervos");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function handshake_dev() {
+// This function retreives handshake's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/hns/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Handshake");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function bitcoin_dev() {
+// This function retreives bitcoin's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/btc/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Bitcoin");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function ethereum_dev() {
+// This function retreives ethereum's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/eth/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Ethereum");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function cardano_dev() {
+// This function retreives cardano's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/ada/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Cardano");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function polkadot_dev() {
+// This function retreives polkadot's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/dot/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Polkadot");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function nem_dev() {
+// This function retreives nem's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/xem/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Nem");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function cosmos_dev() {
+// This function retreives cosmos' developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/atom/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Cosmos");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function solana_dev() {
+// This function retreives solana's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/sol/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Solana");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function eos_dev() {
+// This function retreives eos' developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/eos/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("EOS");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function tron_dev() {
+// This function retreives tron's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/trx/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("TRON");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function neo_dev() {
+// This function retreives neo's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/neo/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("NEO");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function tezos_dev() {
+// This function retreives tezos' developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/xtz/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Tezos");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function vechain_dev() {
+// This function retreives vechain's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/vet/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("VeChain");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function avalanche_dev() {
+// This function retreives avalanche's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/avax/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Avalanche");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function kusama_dev() {
+// This function retreives kusama's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/ksm/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Kusama");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function algorand_dev() {
+// This function retreives algorand's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/algo/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Algorand");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function elrond_dev() {
+// This function retreives elrond's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/egld/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Elrond");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function classic_dev() {
+// This function retreives ethereum classic's developer activity from Messari and outputs the function in the spreadsheet.
+
+// First we get today's date.
+
+// This next line retreives today's date.
+
+var today = new Date();
+
+// The next line we format the date into a more readable format.
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to import the developer activity data from Messari.
+
+// First we source the data from the API and store it in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/etc/metrics")
+
+// Next we get the context from the data source and store it in the variable data_source_content
+
+var data_source_content = data_source.getContentText()
+
+// Next we parse the content of the data into a java script object notation in the data_source_content and store it in the variable data_source_result
+
+var data_source_result = JSON.parse(data_source_content)
+
+// This line we retreive just the developer activity data and store it in the variable dev_activity
+
+var dev_activity = data_source_result.data.developer_activity
+
+// Now we are going to retreive the values in the key = value pairing in the developer activity dictionary and store it in the variable dev_values
+
+var dev_values = Object.values(dev_activity)
+
+// Next we output today's date data and the rest of the developer activity data unto the spreadsheet
+
+// To do so we first get the spreadsheet
+
+// For ease of use we do the following:
+
+var app = SpreadsheetApp
+
+// Get the active spreadsheet
+
+var get_active_spreadsheet = app.getActiveSpreadsheet()
+
+// Next get the worksheet sheet by name and store it in the variable sheet
+
+var sheet = get_active_spreadsheet.getSheetByName("Ethereum Classic");
+
+// Before we output any data we insert a new row
+
+// This inserts a new row above/ before the fourth row
+
+ sheet.insertRowBefore(4);
+
+// Now we start outputting the data onto the spreadsheet.
+
+// First we start with today's date
+
+sheet.getRange(4,2).setValue(today_date)
+
+// Next we output the developer activity data.
+
+// Before doing so, we are going to store the length of the dev_values array in the variable len_dev. We will use this variable later
+
+var len_dev = dev_values.length
+
+// To do that we would need to loop through the dev_values array to output the values. For that we create a variable called looper.
+
+var looper;
+
+// Using looper, loop through the array.
+
+for (looper = 0; looper < len_dev; looper++) {
+  
+// output the dev_values data
+
+sheet.getRange(4,looper+3).setValue(dev_values[looper]);
+
+}
+
+}
+
+
+
+function source_data(){
+  // This function calls the other functions and is used because of the alerts that are prompted when the data is run.
+
+// data sourcing process is commencing
+
+// data_sourcing_is_commencing()
+
+// source nervos data
+
+nervos_dev()
+
+// source handshake data
+
+handshake_dev()
+
+// source bitcoin data
+
+bitcoin_dev()
+
+// source ethereum data
+
+ethereum_dev()
+
+// source cardano data
+
+cardano_dev()
+
+// source polkadot data
+
+polkadot_dev()
+
+// source nem data
+
+nem_dev()
+
+// source cosmos data
+
+cosmos_dev()
+
+// source solana data
+
+solana_dev()
+
+// source eos data
+
+eos_dev()
+
+// source tron data
+
+tron_dev()
+
+// source neo data
+
+neo_dev()
+
+// source tezos data
+
+tezos_dev()
+
+// source vechain data
+
+vechain_dev()
+
+// source avalanche data
+
+avalanche_dev()
+
+// source kusama data
+
+kusama_dev()
+
+// source algorand data
+
+algorand_dev()
+
+// source elrond data
+
+elrond_dev()
+
+// source ethereum classic data
+
+classic_dev()
+
+// data sourcing process is complete
+
+// data_sourcing_is_complete()
+
+}
+
+
+
+function data_sourcing_is_commencing() {
+// This function creates an alert asking the user if they actually want to run a data update
+
+  var result = SpreadsheetApp.getUi().alert("The process of sourcing the data from Messari is commencing", SpreadsheetApp.getUi().ButtonSet.OK);
+  SpreadsheetApp.getActive().toast(result);
+}
+
+
+
+function data_sourcing_is_complete() {
+// This function alerts the user that the data update is complete
+
+  var result = SpreadsheetApp.getUi().alert("The process of sourcing the data from Messari is complete", SpreadsheetApp.getUi().ButtonSet.OK);
+  SpreadsheetApp.getActive().toast(result);
+
+}
+
