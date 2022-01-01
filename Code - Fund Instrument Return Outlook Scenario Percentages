@@ -1,0 +1,354 @@
+function onOpen() {
+// This function creates a menu that can be used to call the functions
+
+// creates a drop down menu
+
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Scenario Analysis')
+      .addItem('Generate Scenario Percentages','output_scenario_percentages')
+      .addToUi();
+      
+ //displays a welcome message
+
+  Browser.msgBox("Welcome Message and Instructions", "Welcome to the Fund Instrument Return Outlook Google Sheet. \\n \\n Here are a few instructions: \\n 1. The sensitivity scenario percentages are randomly generated. \\n 2. The Model worksheet is automatically updated with the calculated upside, downside and winter values.\\n 3. MOE stands for Margin Of Error. \\n  4. Click on the 'Scenario Analysis' to run the analysis.\\n The code takes about a minute to run.", Browser.Buttons.OK)
+    
+}
+
+
+
+function retrieve_upper_scenario_limit() {
+// This function gets the  scenario limit data from the Model worksheet in excel and returns it as get_exit_year_data.
+
+  var app = SpreadsheetApp;
+  
+// This gets the active google sheet "Capital Plan" and stores it in a variable get_active_spreadsheet  
+
+  var get_active_spreadsheet = app.getActiveSpreadsheet();
+  
+// Gets the sheet Model and stores it in a variable get_major_assumptions_Worksheet
+
+  var get_major_assumptions_worksheet = get_active_spreadsheet.getSheetByName("Model");
+  
+// This gets the scenario_limit data from the Model spreadsheet and stores it as an array in a variable get_scenario_limit_data
+
+  var get_scenario_limit_data = get_major_assumptions_worksheet.getRange("d25:d27").getValues();
+  
+// returns the output get_scenario_limit_data
+  
+  return get_scenario_limit_data;
+  
+}
+
+
+
+function retrieve_lower_scenario_limit() {
+// This function gets the  scenario limit data from the Model worksheet in excel and returns it as get_exit_year_data.
+
+  var app = SpreadsheetApp;
+  
+// This gets the active google sheet "Capital Plan" and stores it in a variable get_active_spreadsheet  
+
+  var get_active_spreadsheet = app.getActiveSpreadsheet();
+  
+// Gets the sheet Model and stores it in a variable get_major_assumptions_Worksheet
+
+  var get_major_assumptions_worksheet = get_active_spreadsheet.getSheetByName("Model");
+  
+// This gets the scenario_limit data from the Model spreadsheet and stores it as an array in a variable get_scenario_limit_data
+
+  var get_scenario_limit_data = get_major_assumptions_worksheet.getRange("e25:e27").getValues();
+  
+// returns the output get_scenario_limit_data
+  
+  return get_scenario_limit_data;
+  
+}
+
+
+
+function random_upside_scenario_generator() {
+// Using a random number generator this scenario generates the percentage chance that the actualized exit multiple is above the forecasted exit multiple
+
+// This uses a random number generator to get numbers between upside lower scenario and the upside upper scenario limit and stores it as a percentage in the Variable upside
+
+// First retrieve the upside upper scenario limit and store it in a variable called upside_upper_limit
+
+  var upside_upper_limit = Math.abs(retrieve_upper_scenario_limit()[0])*100;
+  
+// Next retrieve the upside lower scenario limit and store it in a variable called upside_lower_limit
+
+  var upside_lower_limit = Math.abs(retrieve_lower_scenario_limit()[0])*100;
+  
+ // Use the upside upper and lower limits to generate the random upside generator and store it in variable upside
+
+  var upside = (Math.floor(Math.random() * (upside_upper_limit - upside_lower_limit) + upside_lower_limit)/100) ;
+
+// return the output as upside
+
+  return upside;
+
+}
+  
+function random_downside_scenario_generator() {
+// Using a random number generator this scenario generates the percentage chance that the actualized exit multiple is below the forecasted exit multiple
+
+// This uses a random number generator to get numbers between downside lower scenario and the downside upper scenario limit and stores it as a percentage in the Variable downside
+
+// First retrieve the downside upper scenario limit and store it in a variable called downside_upper_limit
+
+  var downside_upper_limit = Math.abs(retrieve_upper_scenario_limit()[1])*100;
+  
+// Next retrieve the downside lower scenario limit and store it in a variable called downside_lower_limit
+
+  var downside_lower_limit = Math.abs(retrieve_lower_scenario_limit()[1])*100;
+  
+ // Use the downside upper and lower limits to generate the random downside generator and store it in variable downside
+
+  var downside = (Math.floor(Math.random() * (downside_upper_limit - downside_lower_limit) + downside_lower_limit)/100)* (-1) ;
+
+// return the output as downside
+
+   return downside;
+   
+}  
+
+
+
+function random_winter_scenario_generator() {
+// Using a random number generator this scenario generates the percentage chance that of a worst case actualized multiple when compared to the forecasted exit multiple.
+
+// This uses a random number generator to get numbers between winter lower scenario and the winter upper scenario limit and stores it as a percentage in the Variable winter
+
+// First retrieve the winter upper scenario limit and store it in a variable called winter_upper_limit
+
+  var winter_upper_limit = Math.abs(retrieve_upper_scenario_limit()[2])*100;
+  
+// Next retrieve the winter lower scenario limit and store it in a variable called winter_lower_limit
+
+  var winter_lower_limit = Math.abs(retrieve_lower_scenario_limit()[2])*100;
+  
+ // Use the winter upper and lower limits to generate the random winter generator and store it in variable winter
+
+  var winter = (Math.floor(Math.random() * (winter_upper_limit - winter_lower_limit) + winter_lower_limit)/100)* (-1) ;
+
+// return the output as winter
+
+  return winter;
+  
+}
+
+
+
+function generate_upside_percentage(){
+// This function uses the random_upside_generator function to generate a upside percentage based on a number of trials
+
+// set the number of trials to be a certain number. The current number is 50.
+
+  let trials = 50;
+ 
+// Using the number of trials  create an array filled with '0's of that length 
+
+  const trials_array = new Array(trials).fill(0);
+  
+// Use a For loop function to go through the array and replace the values with a randomly generate upside percentage. For this I created a random variable "looper" to loop through the array
+
+// Variable looper is created to search through each item in the array
+
+  var looper;
+
+// Looping through the trials_array
+
+  for(looper = 0; looper < trials_array.length; looper ++) {
+
+// replacing all the values in the trials_array
+
+     trials_array[looper] = random_upside_scenario_generator();  
+  }
+
+// generate a random number within the trials. The number would be used as an index to select the position in which the upside percentage would be chosen from. The data is stored in the variable trials_upside index
+
+  var trials_upside_index = Math.floor(Math.random()*trials)
+  
+// Using the trials_upside_index select an upside number from the trials_array and store it in a variable called upside_percentage
+
+  let upside_percentage = trials_array[trials_upside_index]
+
+// return the output upside_percentage
+
+  return upside_percentage
+
+}
+
+
+
+function generate_downside_percentage(){
+// This function uses the random_downside_generator function to generate a downside percentage based on a number of trials
+
+// set the number of trials to be a certain number. The current number is 50.
+
+  let trials = 50;
+ 
+// Using the number of trials  create an array filled with '0's of that length 
+
+  const trials_array = new Array(trials).fill(0);
+   
+// Use a For loop function to go through the array and replace the values with a randomly generate downside percentage. For this I created a random variable "looper" to loop through the array
+
+// Variable looper is created to search through each item in the array
+
+  var looper;
+
+// Looping through the trials_array
+
+  for(looper = 0; looper < trials_array.length; looper ++) {
+
+// replacing all the values in the trials_array
+
+     trials_array[looper] = random_downside_scenario_generator();  
+     
+  }
+
+// generate a random number within the trials. The number would be used as an index to select the position in which the downside percentage would be chosen from. The data is stored in the variable trials_downside index
+
+  var trials_downside_index = Math.floor(Math.random()*trials)
+  
+// Using the trials_downside_index select an downside number from the trials_array and store it in a variable called downside_percentage
+
+  let downside_percentage = trials_array[trials_downside_index]
+
+// return the output downside_percentage
+
+  return downside_percentage
+
+}
+
+
+
+function generate_winter_percentage(){
+// This function uses the random_winter_generator function to generate a winter percentage based on a number of trials
+
+// set the number of trials to be a certain number. The current number is 50.
+
+  let trials = 50;
+ 
+// Using the number of trials  create an array filled with '0's of that length 
+
+  const trials_array = new Array(trials).fill(0);  
+  
+// Use a For loop function to go through the array and replace the values with a randomly generate winter percentage. For this I created a random variable "looper" to loop through the array
+
+// Variable looper is created to search through each item in the array
+
+  var looper;
+
+// Looping through the trials_array
+
+  for(looper = 0; looper < trials_array.length; looper ++) {
+
+// replacing all the values in the trials_array
+
+     trials_array[looper] = random_winter_scenario_generator();  
+  }
+
+// generate a random number within the trials. The number would be used as an index to select the position in which the winter percentage would be chosen from. The data is stored in the variable trials_winter index
+
+  var trials_winter_index = Math.floor(Math.random()*trials)
+  
+// Using the trials_winter_index select an winter number from the trials_array and store it in a variable called winter_percentage
+
+  var winter_percentage = trials_array[trials_winter_index]
+
+// return the output winter_percentage
+
+  return winter_percentage
+}
+
+
+
+function output_scenario_percentages(){
+// This function outputs the sensitivity scenarios line to the sensitivity scenarios section of the Model worksheet.
+
+// To do this first I get the Model worksheet.
+
+// To do that we first get the active spreadsheet 
+
+  var app = SpreadsheetApp;
+  
+// This gets the active google sheet "Capital Plan" and stores it in a variable get_active_spreadsheet  
+
+  var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// Gets the sheet Model and stores it in a variable get_major_assumptions worksheet
+
+  var get_major_assumptions_worksheet = get_active_spreadsheet.getSheetByName("Model");
+  
+// Save the generate_upside_percentage() in the variable upside_percentage
+
+var upside_percentage = generate_upside_percentage()
+
+// Save the generate_downside_percentage() in the variable downside_percentage
+
+var downside_percentage = generate_downside_percentage()
+
+// Save the winter_percentage in the generate_winter_percentage()
+
+var winter_percentage = generate_winter_percentage()
+
+// The next few lines we start to set the upside_percentage, downside_percentage and winter_percentage to the sensitivity scenarios section of the Model worksheet.
+
+// First thing to do is to clear the content in that range of the worksheet.
+
+  get_major_assumptions_worksheet.getRange("c25:c27").clearContent()
+
+// These lines set the values for upside percentage to row 25 of the Model worksheet
+  
+// Use a loop to loop through the array and assign the values to the range. For this I created a random variable "looper" to loop through the array
+
+// Variable looper is created to search through each item in the array
+
+  var looper = 0;
+
+// Looping through the trials_array
+
+ for(looper = 0; looper < 1; looper ++) {
+ 
+ // assign the value from the array to the to the "sensitivity scenarios" range.
+ 
+   get_major_assumptions_worksheet.getRange(25,looper+3).setValue(upside_percentage);
+
+  }
+
+// These lines set the values for downside percentage to row 26 of the Model worksheet
+  
+// Use a loop to loop through the array and assign the values to the range. For this I created a random variable "looper" to loop through the array
+
+// Variable looper is created to search through each item in the array
+
+
+// Looping through the trials_array
+
+ for(looper = 0; looper < 1; looper ++) {
+ 
+ // assign the value from the array to the to the "sensitivity scenarios" range.
+ 
+   get_major_assumptions_worksheet.getRange(26,looper+3).setValue(downside_percentage);
+
+  }
+
+// These lines set the values for winter percentage to row 27 of the Model worksheet
+  
+// Use a loop to loop through the array and assign the values to the range. For this I created a random variable "looper" to loop through the array
+
+// Variable looper is created to search through each item in the array
+
+// Looping through the trials_array
+
+ for(looper = 0; looper < 1; looper ++) {
+ 
+ // assign the value from the array to the to the "sensitivity scenarios" range.
+ 
+      get_major_assumptions_worksheet.getRange(27,looper+3).setValue(winter_percentage);
+
+  }
+
+}
