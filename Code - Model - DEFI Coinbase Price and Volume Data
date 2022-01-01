@@ -1,0 +1,580 @@
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+
+
+
+  ui.createMenu('Get Messari Data')
+      .addItem('Get Yearn.Finance Data','callYfi')
+      .addItem('Get Filecoin Data','callFil',)
+      .addItem('Get Wrapped Bitcoin Data','callWbtc')
+      .addItem('Get UMA Data','callUma')
+      .addItem('Get Uniswap Data','callUni')
+      .addItem('Get AAVE Data','callAave')
+      .addItem('Get Bancor Data','callBnt')
+      .addItem('Get Synthetix Network Data','callSnx')
+      .addItem('Get The Graph Data','callGrt')
+      .addItem('Get Compound Data','callComp')
+      .addItem('Get Celo Data','callCgld')
+      .addItem('Get Bitcoin Data', 'callBitcoin')
+      .addItem('Get Ethereum Data', 'callEth')
+      .addToUi();
+
+//displays a welcome message
+
+  Browser.msgBox("Welcome Message and Instructions", "Welcome to the Defi Coinbase Sheet. \\n \\n Here are a few instructions: \\n 1. This data is automatically set to update once the google sheet is  opened. \\n 2. Incase it does not, click on 'Get Messari Data' to select the different price and volume data sorted in descending order by date.   \\n 3. Get the data that corresponds to the worksheet that you are currently on. \\n 4. The data is retreived from Messari's website. ", Browser.Buttons.OK)
+
+}
+
+
+
+
+function callYfi() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the yfi data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/YFI/metrics/price/time-series?start=2020-08-17&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Yearn.Finance");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+
+function callFil() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the FIL data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/FIL/metrics/price/time-series?start=2020-11-09&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Filecoin");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+
+function callWbtc() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the wbtc data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/wbtc/metrics/price/time-series?start=2020-09-21&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Wrapped Bitcoin");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+    
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callUma() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the uma data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/uma/metrics/price/time-series?start=2020-08-07&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("UMA");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callUni() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the uni data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/uni/metrics/price/time-series?start=2020-08-20&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Uniswap");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callAave() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the aave data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/aave/metrics/price/time-series?start=2020-11-16&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("AAVE");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callBnt() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the bnt data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/bnt/metrics/price/time-series?start=2020-11-16&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Bancor");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callSnx() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the snx data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/snx/metrics/price/time-series?start=2020-11-16&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Synthetix Network");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callGrt() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the grt data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/grt/metrics/price/time-series?start=2020-11-19&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("The Graph");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callComp() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the comp data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/comp/metrics/price/time-series?start=2020-05-26&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Compound");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callCgld() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the cgld data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/celo/metrics/price/time-series?start=2020-08-03&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Celo");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(4,2,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+4 ,j+2).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+4 ,j+2).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+}
+
+function callBitcoin() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the Bitcoin data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/Bitcoin/metrics/price/time-series?start=2020-04-01&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Bitcoin");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+
+}
+
+function callEth() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the eth data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/eth/metrics/price/time-series?start=2020-04-01&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("eth");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+
+}
+
+function source_data(){
+  // This function calls the other functions and is used because of the alerts that are prompted when the data is run.
+
+// data sourcing process is commencing
+
+// data_sourcing_is_commencing()
+
+// source Yearn.Finance data
+
+callYfi()
+
+// source Filecoin data
+
+callFil()
+
+// source Wrapped Bitcoin
+
+callWbtc()
+
+//  source UMA data
+
+callUma()
+
+//  source Uniswap data
+
+callUni()
+
+//  source Aave data
+
+callAave()
+
+//  source Bancor data
+
+callBnt()
+
+//  source Synthetix Network data
+
+callSnx()
+
+//  source The Graph Network data
+
+callGrt()
+
+//  source Compound data
+
+callComp()
+
+//  source Celo data
+
+callCgld()
+
+// Source Bitcoin Data
+
+callBitcoin()
+
+// Source Ethereum Data
+
+callEth()
+
+// data sourcing process is complete
+
+// data_sourcing_is_complete()
+
+}
+
+
+function data_sourcing_is_commencing() {
+// This function creates an alert asking the user if they actually want to run a data update
+
+  var result = SpreadsheetApp.getUi().alert("The process of sourcing the data from Messari is commencing", SpreadsheetApp.getUi().ButtonSet.OK);
+  SpreadsheetApp.getActive().toast(result);
+}
+
+
+
+function data_sourcing_is_complete() {
+// This function alerts the user that the data update is complete
+
+  var result = SpreadsheetApp.getUi().alert("The process of sourcing the data from Messari is complete", SpreadsheetApp.getUi().ButtonSet.OK);
+  SpreadsheetApp.getActive().toast(result);
+
+}
