@@ -1,0 +1,303 @@
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+
+
+
+  ui.createMenu('Get Messari Data')
+      .addItem('Get Bitcoin Data','callBitcoin')
+      .addItem('Get Amp Data','callAmp',)
+      .addItem('Get Nervos Data','callNervos')
+      .addItem('Get Handshake Data','callHandshake')
+      .addItem('Get Ethereum Data','callEthereum')
+      .addItem('Get Numeraire Data','callNumeraire')
+      .addToUi();
+
+//displays a welcome message
+
+  Browser.msgBox("Welcome Message and Instructions", "Welcome to the Messari Liquidity Management Source Sheet. \\n \\n Here are a few instructions: \\n 1. This data is automatically set to update once the google sheet is   opened. \\n 2. Incase it does not, click on 'Get Messari Data' to select the different price and volume data sorted in descending order by date.   \\n 3. Get the data that corresponds to the worksheet that you are currently on. \\n 4. The data in this sheet automatically translates to the '  Fin Dashboard - Blockchain ' spreadsheet. ", Browser.Buttons.OK)
+
+}
+
+
+
+
+function callBitcoin() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the Bitcoin data
+  
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/Bitcoin/metrics/price/time-series?start=2018-01-01&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+  var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Bitcoin");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values.reverse()
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  Logger.log(data_source_result.data.values[0]);
+}
+
+
+function callAmp() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the Flexa data
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/Amp/metrics/price/time-series?start=2020-01-01&interval=1d&end=" + today_date );
+  
+  // Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+   var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Amp");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values.reverse()
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+  Logger.log(data_source_result.data.values);
+}
+
+
+function callNervos() {
+  // Call the Messari 'Get Asset Timeseries API' to gather the Nervos data
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/nervos-network/metrics/price/time-series?start=2020-01-01&interval=1d&end=" + today_date);
+  
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+   var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Nervos");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values.reverse()
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+  Logger.log(data_source_result.data.values[0]);
+}
+
+function callHandshake() {
+   // Call the Messari 'Get Asset Timeseries API' to gather the Handshake data
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/handshake/metrics/price/time-series?start=2020-01-01&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+    var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Handshake");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  //Logger.log(json["data"]["market_data"]);
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values.reverse()
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+  Logger.log(data_source_result.data.values[0]);
+}
+
+
+
+function callEthereum() {
+   // Call the Messari 'Get Asset Timeseries API' to gather the Ethereum data
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/Ethereum/metrics/price/time-series?start=2020-01-01&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+    var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Ethereum");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  //Logger.log(json["data"]["market_data"]);
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values.reverse()
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+  Logger.log(data_source_result.data.values[0]);
+}
+
+
+
+function callNumeraire() {
+   // Call the Messari 'Get Asset Timeseries API' to gather the Numeraire data
+  var today = new Date();
+  var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+  var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/Numeraire/metrics/price/time-series?start=2020-01-01&interval=1d&end=" + today_date);
+  Logger.log(data_source.getContentText());
+  
+  var data_source_context = data_source.getContentText();
+    var get_active_spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = get_active_spreadsheet.getSheetByName("Numeraire");
+  // Logger.log(Object.entries(data_source_context));
+  var  data_source_result = JSON.parse(data_source_context);
+  //Logger.log(json["data"]["market_data"]);
+
+  sheet.getRange(1,1,500,6).clearContent()
+  var data_source_reverse_order = data_source_result.data.values.reverse()
+  var i;
+  
+  for (i = 0; i < data_source_reverse_order.length; i++) {
+   
+   
+  var j;
+    
+    for (j= 0; j < data_source_reverse_order[i].length; j++) 
+    {
+      sheet.getRange( i+1 ,j+1).setValue(data_source_reverse_order[i][j]);
+      
+      if (j === 0) sheet.getRange( i+1 ,j+1).setValue(new Date(data_source_reverse_order[i][j]));
+      
+    }
+    
+  }
+  
+  Logger.log(data_source_result.data.values[0]);
+}
+
+
+
+
+function source_data(){
+  // This function calls the other functions and is used because of the alerts that are prompted when the data is run.
+
+// data sourcing process is commencing
+
+// data_sourcing_is_commencing()
+
+// source bitcoin data
+
+callBitcoin()
+
+// source flexa data
+
+callAmp()
+
+// source nervos data
+
+callNervos()
+
+//  source handshake data
+
+callHandshake()
+
+// source ethereum data
+
+ callEthereum()
+
+// source Numeraire data
+
+// callNumeraire()
+
+// data sourcing process is complete
+
+// data_sourcing_is_complete()
+
+}
+
+
+
+function data_sourcing_is_commencing() {
+// This function creates an alert asking the user if they actually want to run a data update
+
+  var result = SpreadsheetApp.getUi().alert("The process of sourcing the data from Messari is commencing", SpreadsheetApp.getUi().ButtonSet.OK);
+  SpreadsheetApp.getActive().toast(result);
+}
+
+
+
+function data_sourcing_is_complete() {
+// This function alerts the user that the data update is complete
+
+  var result = SpreadsheetApp.getUi().alert("The process of sourcing the data from Messari is complete", SpreadsheetApp.getUi().ButtonSet.OK);
+  SpreadsheetApp.getActive().toast(result);
+
+}
