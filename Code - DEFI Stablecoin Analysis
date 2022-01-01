@@ -1,0 +1,997 @@
+function get_date() {
+
+// This function outputs the date in the date column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/usdc/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent date first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,2,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 0) main_sheet.getRange( 4+first_loop ,2+second_loop).setValue(new Date(reverse_data[first_loop][second_loop]));
+
+}
+
+}
+
+}
+
+
+
+function get_dai() {
+
+// This function outputs the market cap of dai stablecoin in the dai column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/dai/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent dai first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,3,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,2+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_usdt() {
+
+// This function outputs the market cap of usdt stablecoin in the usdt column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/usdt/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent usdt first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,4,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,3+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_usdc() {
+
+// This function outputs the market cap of usdc stablecoin in the usdc column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/usdc/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent usdc first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,5,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,4+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_husd() {
+
+// This function outputs the market cap of husd stablecoin in the husd column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/husd/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent husd first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,6,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,5+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_susd() {
+
+// This function outputs the market cap of susd stablecoin in the susd column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/susd/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent susd first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,7,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,6+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_pax() {
+
+// This function outputs the market cap of pax stablecoin in the pax column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/pax/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent pax first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,8,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,7 +second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_busd() {
+
+// This function outputs the market cap of busd stablecoin in the busd column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/busd/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent busd first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,9,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,8+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_tvl_defi() {
+// This function retreives the TVL of the defi ecosystem of all 
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Then after we are going to retrieve the data from the defi pulse and store it in the variable defi_api
+
+var defi_api = UrlFetchApp.fetch("https://data-api.defipulse.com/api/v1/defipulse/api/GetHistory?period=all&api-key=71622ab6940cfff38d9b658b97f511fb7a8ca1d8488381e6dd0081c5a9f5")
+
+// Next we are going to get the context/ content of the api and store the result in the variable data_defi
+
+var data_defi = defi_api.getContentText();
+
+// Now parse the content into a format that we can code/ interact with in this coding environment and store it in the variable tvl_defi
+
+var tvl_defi = JSON.parse(data_defi)
+
+// Next clear the area in which we are going to output the data
+
+main_sheet.getRange(4,10,500,1).clearContent()
+
+// then using the looper variable, we are going to loop through the data and retreive the information we are looking for and output it in the desired column. Note we are looking for "tvlUSD" data.  
+
+var looper;
+
+for (looper = 0; looper < 501; looper++ ){
+
+// Now we get the data and output the data
+
+main_sheet.getRange(4+looper,10,500,1).setValue(tvl_defi[looper]["tvlUSD"])
+
+}
+
+}
+
+
+
+function get_btc() {
+
+// This function outputs the market cap of btc stablecoin in the btc column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/btc/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent btc first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,11,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,10+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+function get_eth() {
+
+// This function outputs the market cap of btc stablecoin in the btc column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/ETH/metrics/mcap.circ/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent btc first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,12,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,11+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function get_eth_price() {
+
+// This function outputs the market cap of btc stablecoin in the btc column.
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// Next we are going to get the data that we need and we are going to retreive it from the messari api.
+
+// To do that we are first going to call and store the messari api. 
+
+// before we do that we are going to get a variable of today's date.
+
+// get a new date and store it in the variable today
+
+var today = new Date()
+
+// set the format of the date and store it in the variable today_date
+
+var today_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate()
+
+// Now we are going to call and save the api in the variable messari_api
+
+var messari_api = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/ETH/metrics/price/time-series?start=2019-01-01&interval=1d&end=" + today_date);
+
+// Now we are going to translate the data from the api into a context that we can code with before we output onto the worksheet.
+
+// We are going to save it in a variable data_context
+
+var data_context = messari_api.getContentText()
+
+// Next we are going to parse the data and store it in the variable data_source
+
+var data_source = JSON.parse(data_context);
+
+// Because we want to see the most recent btc first we are going to reverse the data source and store the result in the variable reverse_data
+
+var reverse_data = data_source.data.values.reverse()
+
+// Before we start outputting the data we need to clear the data in the area we would be posting the data.
+
+main_sheet.getRange(4,13,500,1).clearContent()
+
+// Now we are going to start outputting the data. To do that we are going to loop through the data set using through looper variables first_loop and second_loop
+
+// First we create the first loop
+
+var first_loop;
+
+// Now we are going to loop throguh the outer layer of the data set.
+
+for (first_loop = 0; first_loop < reverse_data.length; first_loop++ ) { 
+
+// now we create the second loop to loop through the inner layer
+
+var second_loop;
+
+for (second_loop = 0; second_loop < reverse_data.length; second_loop ++ ) {
+
+// Using an if statement we are going to select only the date from this data set and utput it into the determined/ cleared area
+
+if (second_loop === 1) main_sheet.getRange( 4+first_loop ,12+second_loop).setValue(reverse_data[first_loop][second_loop]);
+
+}
+
+}
+
+}
+
+
+
+function retreive_data() {
+// This function calls the previous functions and outputs the data
+
+// First retreive the spreadsheet that you want to work on.
+
+  var app = SpreadsheetApp;
+
+// The next line you retrieve the Defi/Stablecoin Analysis google sheet and store it in the variable stablecoin sheet.
+
+var stablecoin_sheet = app.openByUrl("https://docs.google.com/spreadsheets/d/1iJF5m8_hYzBoajm_P96DtvRkyGyRk-af00T7Kkw9HFA/edit#gid=0")
+
+// Next get the "main sheet" tab/ worksheet in the google sheet and store it in the variable main_sheet.
+
+var main_sheet = stablecoin_sheet.getSheetByName("Main Sheet")
+
+// get the date data
+
+get_date()
+
+// get the dai data
+
+get_dai()
+
+// get the usdt data
+
+get_usdt()
+
+// get the usdc data
+
+get_usdc()
+
+// get the husd data
+
+get_husd()
+
+// get the susd data
+
+get_susd()
+
+// get the pax data
+
+get_pax()
+
+// get the busd data
+
+get_busd()
+
+//get the tvl usd data
+
+get_tvl_defi()
+
+//get the btc_tvl data
+
+get_btc()
+
+//get the eth_tvl data
+
+get_eth()
+
+// get the eth_price data
+
+get_eth_price()
+
+// For conciseness sake we are going to clear any content below row 504.
+
+main_sheet.getRange(504,1,500,500).clearContent()
+
+}
+
+
+
