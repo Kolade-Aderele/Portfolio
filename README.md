@@ -1,2 +1,2 @@
 # Portfolio
-The body of work in this portfolio is the code I wrote to automate some financial models and reporting for work.
+The body of work in this portfolio is the code I wrote to automate some financial models and reporting for work. This body of work was done on Google's developer environment "Apps Script" using a version of Javascript, "Google Script". The purpose of the underlying code was to automate the reporting process for some of our regular financial updates. Others were to automatically pull price and volume data from external websites. I do not include the source spreadsheets/ dashboards to protect private company information.
