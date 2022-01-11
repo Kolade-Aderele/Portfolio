@@ -1,9 +1,7 @@
 function onOpen() {
 
   // This function runs a few tasks when the google sheet is opened or refreshed.
-  
-  // Here is a link to the google sheet: https://docs.google.com/spreadsheets/d/1iyL45xPOm9tZeX9E873-LgUjHtE2ZCYZdu4A55FnZwU/edit#gid=0
-  
+
   // Next few lines creates a menu of tasks:
 
   // first retrieved the user interface of the google sheet
@@ -363,10 +361,11 @@ var get_end = get_model.getRange("E5").getValue();
 // Logger.log(typeof get_end)
 
 /* Next we are going to use the get_ticker, get_start and get_end variables to source the data from messari. We are going to store the pulled data in the variable data_source
-Note we are using the mcap.out API to assess the market capitalization because it is the sum USD value of the current supply also referred to as network value or market capitalization.*/
+Note we are using the mcap.circ API to assess the market capitalization because the circulating marketcap is the price of the asset multiplied by the circulating supply. 
+If no price is found for an asset because no trades occurred, the last price of the last trade is used. After 30 days with no trades, a marketcap of 0 is reported until trading resumes.*/
 
 
-var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/mcap.out/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/mcap.circ/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
 
 // Next we are going to log the data source to check if the data we got was correct.
 
