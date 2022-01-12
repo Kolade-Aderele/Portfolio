@@ -68,7 +68,7 @@ var get_model = get_active_spreadsheet.getSheetByName("Model")
 // Next we are going to clear the previous data in the range we are going to update
 
 /* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
-This particular line clears the data in the Open, High, Low, Close sections of the Model worksheet */
+This particular line clears the data in the Date, Open, High, Low, Close sections of the Model worksheet */
 
 get_model.getRange(12,2,1500,5).clearContent()
 
@@ -208,7 +208,7 @@ var get_model = get_active_spreadsheet.getSheetByName("Model")
 // Next we are going to clear the previous data in the range we are going to update
 
 /* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
-This particular line clears the data in the Open, High, Low, Close sections of the Model worksheet */
+This particular line clears the data in the Trade Volume sections of the Model worksheet */
 
 get_model.getRange(12,8,1500,1).clearContent()
 
@@ -324,7 +324,7 @@ var get_model = get_active_spreadsheet.getSheetByName("Model")
 // Next we are going to clear the previous data in the range we are going to update
 
 /* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
-This particular line clears the data in the Open, High, Low, Close sections of the Model worksheet */
+This particular line clears the data in the Market Capitalization sections of the Model worksheet */
 
 get_model.getRange(12,10,1500,1).clearContent()
 
