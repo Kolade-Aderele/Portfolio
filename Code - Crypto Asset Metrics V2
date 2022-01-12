@@ -2,6 +2,8 @@ function onOpen() {
 
   // This function runs a few tasks when the google sheet is opened or refreshed.
 
+ // // Access the Crypto Asset Metrics spreadsheet (google sheet) here: https://docs.google.com/spreadsheets/d/1CSxJRyyY4pEsG6yxZNusUFhrpe0FDMzdRFZf2n-S-S0/edit#gid=0
+
   // Next few lines creates a menu of tasks:
 
   // first retrieved the user interface of the google sheet
