@@ -1,0 +1,797 @@
+function onOpen() {
+
+  // This function runs a few tasks when the google sheet is opened or refreshed.
+
+  // Next few lines creates a menu of tasks:
+
+  // first retrieved the user interface of the google sheet
+
+  var ui = SpreadsheetApp.getUi();
+
+  // Then create the menu
+  
+  ui.createMenu('Get Asset Data from API')
+     
+   // add items to the menu
+
+   // add the callAsset Data function to the menu.    
+      .addItem('Get Asset Data','callAssetData')
+      .addToUi();
+
+//displays a welcome message
+
+  Browser.msgBox("Welcome Message and Instructions", "Welcome to the Crypto Assets Metrics Google Sheet. This sheet imports the historical price, trade volume and market capitalization data for the speicifed asset within the specified period. \\n \\n Here are a few instructions on how to operate the spreadsheet: \\n 1. Query the data by entering the inputs in the sections that have a Yellow background color and Blue font color. \\n 2. Click on 'Get Asset Data from API' and then 'Get Asset Data' to run the function that imports the required data for the speicified asset in the specified date range.\\n 3. Please do not alter, insert, delete or shift columns or data in the spreadsheet. Doing so would require altering the code in the backend of the spreadsheet. \\n 4. Click on 'Extensions' then 'Apps Script' to access the developer environment that stores the backend code. \\n 5. If you ever run the model and it does not return any values for the column it means Messari does not store that data point for your specified Asset or there is an issue with Messari's API. \\n 6. All the input parameters must be entered into the function. ", Browser.Buttons.OK)
+
+}
+
+
+
+function callAssetData() {
+  // This function retrieves the historical Price, Trade Volume, Market Cap, Reddit Subscribers and Reddit Active Users and Tweet Count time series data for an asset from a certain start date to the end date.
+
+  // Note: The tweet Count time series data is of the tweet count per hour last seven days 
+  
+  // In this function we are going to use the callAsset_Price, callAsset_Trade_Volume and the callAsset_Market_Cap functions.
+
+  // Start with the callAsset_Price function to import the asset's Date and Close Price data into the spreadsheet.
+
+  callAsset_Price()
+
+  // Next use the callAsset_Trade_Volume function to import the asset's Trade Volume data into the spreadsheet.
+
+  callAsset_Trade_Volume()
+
+  // Next use the callAsset_Market_Capitalization function to import the asset's Market Capitalization data into the spreadsheet.
+
+  callAsset_Market_Cap()
+
+  // Next use the callAsset_Reddit_Act function to import the asset's Reddit Active Users data into the spreadsheet.
+
+  callAsset_Reddit_Act()
+
+  // Next use the callAsset_Reddit_Subs function to import the asset's Reddit Subscribers data into the spreadsheet.
+
+  callAsset_Reddit_Subs()
+
+  // Next use the callTweet_Count function to import the asset's Tweet Count data into the spreadsheet.
+
+  callTweet_Count()
+
+ // That is the end of the function.
+
+}
+
+
+function callAsset_Price() {
+// This function retrieves the historical close price data for an asset for a specified period.
+
+// First retrieve the spreadsheet (google sheet) we want to work on. The name of the google sheet is the Crypto Assets Metrics.  
+
+// To do that we first get the active spreadsheet 
+
+var app = SpreadsheetApp;
+
+// Next we get the active google sheet " Crypto Asset Metrics" and stores it in a variable get_active_spreadsheet.
+
+var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// get the worksheet we will be working on. The name of the worksheet is "Model". Hence we will get the Model worksheet and store it in the variable get_model
+
+var get_model = get_active_spreadsheet.getSheetByName("Model")
+
+// Next we are going to clear the previous data in the range we are going to update
+
+/* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
+This particular line clears the data in the Open, High, Low, Close sections of the Model worksheet */
+
+get_model.getRange(12,2,1500,2).clearContent()
+
+// Next we are going to work on importing the Asset's price data by calling/ pulling the data from Messari's "Get Asset Timeseries API".
+
+// First we are going to pull the appropriate input's from the input section of the data set. 
+
+/* The data we need inputted from the Model worksheet is the Asset's Ticker, Start Date and End Date. We are going to import this data and store it in their individual/ respective variables. 
+We are going to use those inputs to form the Messari's API. That is they are going to be used to call the data from the appropriate API. We need to verify that the datatype of the inputs we retrieve are Strings
+Hence we are going to confirm the data type. If they are not Strings we are going to convert the data to Strings. */
+
+// First we will start by retreiving the Asset's Ticker input and store it in the variable get_ticker
+
+var get_ticker = get_model.getRange("C5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Asset Ticker.
+
+// Logger.log(typeof get_ticker)
+
+// Next we are going to get the Start Date input and store it in the variable get_start
+
+var get_start = get_model.getRange("D5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Start Date.
+
+// Logger.log(typeof get_start)
+
+/// Next we are going to get the End Date input and store it in the variable get_end
+
+var get_end = get_model.getRange("E5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the End Date.
+
+// Logger.log(typeof get_end)
+
+// Next we are going to use the get_ticker, get_start and get_end variables to source the data from messari. We are going to store the pulled data in the variable data_source
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/price/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
+
+// Next we are going to log the data source to check if the data we got was correct.
+
+// Logger.log(" ")
+
+// Logger.log(data_source)
+
+// In the next two steps we are going to retrieve the content of the API then parse it into JSON which would allow us to work on the content of the API.
+
+// First we retrieve the content of the API and store it in the variable data_source_content.
+
+var data_source_content = data_source.getContentText();
+
+// Next we parse the data and store the result in the variable data_source_result.
+
+var data_source_result = JSON.parse(data_source_content);
+
+// Next we are going to check if an array is empty. If it is not empty we continue to  output the data points. If it is empty the function ends here.
+
+if ( data_source_result.data.values != null ) {
+
+// Since we want the data to display in descending order from End Date to Start Date we are going to reverse the order of the result and store the data in the variable data_source_reverse_order
+
+var data_source_reverse_order = data_source_result.data.values.reverse()
+
+// The above function reverses the order of the values array. 
+
+/* The next few steps we are going to start outputting the data in the respective positions on the Model worksheet. We are going to create a variable outer_looper to loop through the outer array.
+That will allow us to get the line by line data. Next we are going to create Date and Close loops to get the respective data based on the index position in the inner array. 
+The Date is the first in the array so the index position is 0 and Close index position is 4. 
+Also note that Date is currently store in the timestamp format and we are going to work on changing the format. */
+
+// creating the outer_looper
+
+var outer_looper = 0;
+
+// Looping through the outer array
+ 
+for (outer_looper = 0; outer_looper < data_source_reverse_order.length; outer_looper++) {
+
+// Next we are going to create variables for Date, Open, High, Low and Close data points to get the respective values from the inner array.
+
+// We are going to start with the date, create a variable date_looper.
+
+var date_looper = 0
+
+// Next we are going to output the variable in the respect position in the spreadsheet and change the format from timestamp to date.
+
+if (date_looper === 0) get_model.getRange( outer_looper + 12 ,date_looper+2).setValue(new Date(data_source_reverse_order[outer_looper][date_looper]));
+
+// Next we are going to output the Close price. We create a variable close_looper
+
+var close_looper = 4
+
+if(close_looper === 4) get_model.getRange(outer_looper + 12, close_looper -1 ).setValue(data_source_reverse_order[outer_looper][close_looper])
+
+}
+
+}
+
+// That is the end of this function. 
+
+}
+
+
+
+function callAsset_Trade_Volume() {
+// This function retrieves the historical Trade Volume data for an asset for a specified period.
+
+// First retrieve the spreadsheet (google sheet) we want to work on. The name of the google sheet is the Crypto Assets Metrics.  
+
+// To do that we first get the active spreadsheet 
+
+var app = SpreadsheetApp;
+
+// Next we get the active google sheet " Crypto Asset Metrics" and stores it in a variable get_active_spreadsheet.
+
+var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// get the worksheet we will be working on. The name of the worksheet is "Model". Hence we will get the Model worksheet and store it in the variable get_model
+
+var get_model = get_active_spreadsheet.getSheetByName("Model")
+
+// Next we are going to clear the previous data in the range we are going to update
+
+/* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
+This particular line clears the data in the Trade Volume section(s) of the Model worksheet */
+
+get_model.getRange(12,4,1500,1).clearContent()
+
+// Next we are going to work on importing the Asset's trade volume data by calling/ pulling the data from Messari's "Get Asset Timeseries API".
+
+// First we are going to pull the appropriate input's from the input section of the data set. 
+
+/* The data we need inputted from the Model worksheet is the Asset's Ticker, Start Date and End Date. We are going to import this data and store it in their individual/ respective variables. 
+We are going to use those inputs to form the Messari's API. That is they are going to be used to call the data from the appropriate API. We need to verify that the datatype of the inputs we retrieve are Strings
+Hence we are going to confirm the data type. If they are not Strings we are going to convert the data to Strings. */
+
+// First we will start by retreiving the Asset's Ticker input and store it in the variable get_ticker
+
+var get_ticker = get_model.getRange("C5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Asset Ticker.
+
+// Logger.log(typeof get_ticker)
+
+// Next we are going to get the Start Date input and store it in the variable get_start
+
+var get_start = get_model.getRange("D5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Start Date.
+
+// Logger.log(typeof get_start)
+
+/// Next we are going to get the End Date input and store it in the variable get_end
+
+var get_end = get_model.getRange("E5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the End Date.
+
+// Logger.log(typeof get_end)
+
+/* Next we are going to use the get_ticker, get_start and get_end variables to source the data from messari. We are going to store the pulled data in the variable data_source
+Note we are using the real.vol API to assess the trade volume free of any wash trading. It is well known that many exchanges conduct wash trading practices in order to inflate 
+trading volume. They are incentivized to report inflated volumes in order to attract traders.*/
+
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/real.vol/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
+
+// Next we are going to log the data source to check if the data we got was correct.
+
+// Logger.log(" ")
+
+// Logger.log(data_source)
+
+// In the next two steps we are going to retrieve the content of the API then parse it into JSON which would allow us to work on the content of the API.
+
+// First we retrieve the content of the API and store it in the variable data_source_content.
+
+var data_source_content = data_source.getContentText();
+
+// Next we parse the data and store the result in the variable data_source_result.
+
+var data_source_result = JSON.parse(data_source_content);
+
+// Next we are going to check if an array is empty. If it is not empty we continue to  output the data points. If it is empty the function ends here.
+
+if ( data_source_result.data.values != null ) {
+
+// Since we want the data to display in descending order from End Date to Start Date we are going to reverse the order of the result and store the data in the variable data_source_reverse_order
+
+var data_source_reverse_order = data_source_result.data.values.reverse()
+
+// The above function reverses the order of the values array. 
+
+/* The next few steps we are going to start outputting the data in the respective positions on the Model worksheet. We are going to create a variable outer_looper to loop through the outer array.
+That will allow us to get the line by line data. Next we are going to create a trade_looper to get the retrieve the trade volume data based on the index position in the inner array. 
+The Date is the first in the array so the index position is 0 and since we have already retrieved the date in the callAsset_Price function we are going to ignore this data point. The index position for the trade volume data in the inner array is 1.*/
+
+// creating the outer_looper
+
+var outer_looper = 0;
+
+// Looping through the outer array
+ 
+for (outer_looper = 0; outer_looper < data_source_reverse_order.length; outer_looper++) {
+
+// Next we are going to create variables  for the trade volume data point to get the respective values from the inner array.
+
+// We are going to start with the trade volume, create a variable trade_looper.
+
+var trade_looper = 1
+
+// Next we are going to output the variable in the respective position in the spreadsheet.
+
+if (trade_looper === 1) get_model.getRange( outer_looper + 12 ,trade_looper+3).setValue(data_source_reverse_order[outer_looper][trade_looper]);
+
+
+}
+
+}
+
+// That is the end of this function. 
+
+}
+
+
+
+function callAsset_Market_Cap() {
+// This function retrieves the historical Market Capitalization data for an asset for a specified period.
+
+// First retrieve the spreadsheet (google sheet) we want to work on. The name of the google sheet is the Crypto Assets Metrics.  
+
+// To do that we first get the active spreadsheet 
+
+var app = SpreadsheetApp;
+
+// Next we get the active google sheet " Crypto Asset Metrics" and stores it in a variable get_active_spreadsheet.
+
+var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// get the worksheet we will be working on. The name of the worksheet is "Model". Hence we will get the Model worksheet and store it in the variable get_model
+
+var get_model = get_active_spreadsheet.getSheetByName("Model")
+
+// Next we are going to clear the previous data in the range we are going to update
+
+/* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
+This particular line clears the data in the Market Capitalization section(s) of the Model worksheet */
+
+get_model.getRange(12,5,1500,1).clearContent()
+
+// Next we are going to work on importing the Asset's market capitalization data by calling/ pulling the data from Messari's "Get Asset Timeseries API".
+
+// First we are going to pull the appropriate input's from the input section of the data set. 
+
+/* The data we need inputted from the Model worksheet is the Asset's Ticker, Start Date and End Date. We are going to import this data and store it in their individual/ respective variables. 
+We are going to use those inputs to form the Messari's API. That is they are going to be used to call the data from the appropriate API. We need to verify that the datatype of the inputs we retrieve are Strings
+Hence we are going to confirm the data type. If they are not Strings we are going to convert the data to Strings. */
+
+// First we will start by retreiving the Asset's Ticker input and store it in the variable get_ticker
+
+var get_ticker = get_model.getRange("C5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Asset Ticker.
+
+// Logger.log(typeof get_ticker)
+
+// Next we are going to get the Start Date input and store it in the variable get_start
+
+var get_start = get_model.getRange("D5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Start Date.
+
+// Logger.log(typeof get_start)
+
+/// Next we are going to get the End Date input and store it in the variable get_end
+
+var get_end = get_model.getRange("E5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the End Date.
+
+// Logger.log(typeof get_end)
+
+/* Next we are going to use the get_ticker, get_start and get_end variables to source the data from messari. We are going to store the pulled data in the variable data_source
+Note we are using the mcap.circ API to assess the market capitalization because the circulating marketcap is the price of the asset multiplied by the circulating supply. 
+If no price is found for an asset because no trades occurred, the last price of the last trade is used. After 30 days with no trades, a marketcap of 0 is reported until trading resumes.*/
+
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/mcap.circ/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
+
+// Next we are going to log the data source to check if the data we got was correct.
+
+// Logger.log(" ")
+
+// Logger.log(data_source)
+
+// In the next two steps we are going to retrieve the content of the API then parse it into JSON which would allow us to work on the content of the API.
+
+// First we retrieve the content of the API and store it in the variable data_source_content.
+
+var data_source_content = data_source.getContentText();
+
+// Next we parse the data and store the result in the variable data_source_result.
+
+var data_source_result = JSON.parse(data_source_content);
+
+// Next we are going to check if an array is empty. If it is not empty we continue to  output the data points. If it is empty the function ends here.
+
+if ( data_source_result.data.values != null ) {
+
+// Since we want the data to display in descending order from End Date to Start Date we are going to reverse the order of the result and store the data in the variable data_source_reverse_order
+
+var data_source_reverse_order = data_source_result.data.values.reverse()
+
+// The above function reverses the order of the values array. 
+
+/* The next few steps we are going to start outputting the data in the respective positions on the Model worksheet. We are going to create a variable outer_looper to loop through the outer array.
+That will allow us to get the line by line data. Next we are going to create a mcap_looper to get the retrieve the market capitalization data based on the index position in the inner array. 
+The Date is the first in the array so the index position is 0 and since we have already retrieved the date in the callAsset_Price function we are going to ignore this data point. The index position for the market capitalization data in the inner array is 1.*/
+
+// creating the outer_looper
+
+var outer_looper = 0;
+
+// Looping through the outer array
+ 
+for (outer_looper = 0; outer_looper < data_source_reverse_order.length; outer_looper++) {
+
+// Next we are going to create variables  for the market capitalization data point to get the respective values from the inner array.
+
+// We are going to update with the market capitalization , create a variable mcap_looper.
+
+var mcap_looper = 1
+
+// Next we are going to output the Market Capitalization using the variable mcap_looper.
+
+if (mcap_looper === 1) get_model.getRange( outer_looper + 12 ,mcap_looper+4).setValue(data_source_reverse_order[outer_looper][mcap_looper]);
+
+
+}
+
+}
+
+// That is the end of this function. 
+
+}
+
+
+
+function callAsset_Reddit_Act() {
+// This function retrieves the historical Reddit Active Users data for an asset for a specified period.
+
+// First retrieve the spreadsheet (google sheet) we want to work on. The name of the google sheet is the Crypto Assets Metrics.  
+
+// To do that we first get the active spreadsheet 
+
+var app = SpreadsheetApp;
+
+// Next we get the active google sheet " Crypto Asset Metrics" and stores it in a variable get_active_spreadsheet.
+
+var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// get the worksheet we will be working on. The name of the worksheet is "Model". Hence we will get the Model worksheet and store it in the variable get_model
+
+var get_model = get_active_spreadsheet.getSheetByName("Model")
+
+// Next we are going to clear the previous data in the range we are going to update
+
+/* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
+This particular line clears the data in the Reddit Active Users section(s) of the Model worksheet */
+
+get_model.getRange(12,7,1500,1).clearContent()
+
+// Next we are going to work on importing the Asset's Reddit Active Users data by calling/ pulling the data from Messari's "Get Asset Timeseries API".
+
+// First we are going to pull the appropriate input's from the input section of the data set. 
+
+/* The data we need inputted from the Model worksheet is the Asset's Ticker, Start Date and End Date. We are going to import this data and store it in their individual/ respective variables. 
+We are going to use those inputs to form the Messari's API. That is they are going to be used to call the data from the appropriate API. We need to verify that the datatype of the inputs we retrieve are Strings
+Hence we are going to confirm the data type. If they are not Strings we are going to convert the data to Strings. */
+
+// First we will start by retreiving the Asset's Ticker input and store it in the variable get_ticker
+
+var get_ticker = get_model.getRange("C5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Asset Ticker.
+
+// Logger.log(typeof get_ticker)
+
+// Next we are going to get the Start Date input and store it in the variable get_start
+
+var get_start = get_model.getRange("D5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Start Date.
+
+// Logger.log(typeof get_start)
+
+/// Next we are going to get the End Date input and store it in the variable get_end
+
+var get_end = get_model.getRange("E5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the End Date.
+
+// Logger.log(typeof get_end)
+
+/* Next we are going to use the get_ticker, get_start and get_end variables to source the data from messari. We are going to store the pulled data in the variable data_source
+Note we are using the reddit.active.users API to assess the Reddit Active Users because it is the number of active users on the asset's primary subreddit */
+
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/reddit.active.users/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
+
+// Next we are going to log the data source to check if the data we got was correct.
+
+// Logger.log(" ")
+
+// Logger.log(data_source)
+
+// In the next two steps we are going to retrieve the content of the API then parse it into JSON which would allow us to work on the content of the API.
+
+// First we retrieve the content of the API and store it in the variable data_source_content.
+
+var data_source_content = data_source.getContentText();
+
+// Next we parse the data and store the result in the variable data_source_result.
+
+var data_source_result = JSON.parse(data_source_content);
+
+// Next we are going to check if an array is empty. If it is not empty we continue to  output the data points. If it is empty the function ends here.
+
+if ( data_source_result.data.values != null ) {
+
+// Since we want the data to display in descending order from End Date to Start Date we are going to reverse the order of the result and store the data in the variable data_source_reverse_order
+
+var data_source_reverse_order = data_source_result.data.values.reverse()
+
+// The above function reverses the order of the values array. 
+
+/* The next few steps we are going to start outputting the data in the respective positions on the Model worksheet. We are going to create a variable outer_looper to loop through the outer array.
+That will allow us to get the line by line data. Next we are going to create a red_act_looper to get the retrieve the Reddit Active Users data based on the index position in the inner array. 
+The Date is the first in the array so the index position is 0 and since we have already retrieved the date in the callAsset_Price function we are going to ignore this data point. The index position for the Reddit Active Users data in the inner array is 1.*/
+
+// creating the outer_looper
+
+var outer_looper = 0;
+
+// Looping through the outer array
+ 
+for (outer_looper = 0; outer_looper < data_source_reverse_order.length; outer_looper++) {
+
+// Next we are going to create variables  for the Reddit Active Users data point to get the respective values from the inner array.
+
+// We are going to start with the Reddit Active Users , create a variable red_act_looper.
+
+var red_act_looper = 1
+
+// Next we are going to output the Reddit Active Users using the variable red_act_looper.
+
+if (red_act_looper === 1) get_model.getRange( outer_looper + 12 ,red_act_looper+6).setValue(data_source_reverse_order[outer_looper][red_act_looper]);
+
+
+}
+
+}
+
+// That is the end of this function. 
+
+}
+
+
+
+function callAsset_Reddit_Subs() {
+// This function retrieves the historical Reddit Subscribers data for an asset for a specified period.
+
+// First retrieve the spreadsheet (google sheet) we want to work on. The name of the google sheet is the Crypto Assets Metrics.  
+
+// To do that we first get the active spreadsheet 
+
+var app = SpreadsheetApp;
+
+// Next we get the active google sheet " Crypto Asset Metrics" and stores it in a variable get_active_spreadsheet.
+
+var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// get the worksheet we will be working on. The name of the worksheet is "Model". Hence we will get the Model worksheet and store it in the variable get_model
+
+var get_model = get_active_spreadsheet.getSheetByName("Model")
+
+// Next we are going to clear the previous data in the range we are going to update
+
+/* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
+This particular line clears the data in the Reddit Subscribers section(s) of the Model worksheet */
+
+get_model.getRange(12,8,1500,1).clearContent()
+
+// Next we are going to work on importing the Asset's Reddit Subscribers data by calling/ pulling the data from Messari's "Get Asset Timeseries API".
+
+// First we are going to pull the appropriate input's from the input section of the data set. 
+
+/* The data we need inputted from the Model worksheet is the Asset's Ticker, Start Date and End Date. We are going to import this data and store it in their individual/ respective variables. 
+We are going to use those inputs to form the Messari's API. That is they are going to be used to call the data from the appropriate API. We need to verify that the datatype of the inputs we retrieve are Strings
+Hence we are going to confirm the data type. If they are not Strings we are going to convert the data to Strings. */
+
+// First we will start by retreiving the Asset's Ticker input and store it in the variable get_ticker
+
+var get_ticker = get_model.getRange("C5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Asset Ticker.
+
+// Logger.log(typeof get_ticker)
+
+// Next we are going to get the Start Date input and store it in the variable get_start
+
+var get_start = get_model.getRange("D5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Start Date.
+
+// Logger.log(typeof get_start)
+
+/// Next we are going to get the End Date input and store it in the variable get_end
+
+var get_end = get_model.getRange("E5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the End Date.
+
+// Logger.log(typeof get_end)
+
+/* Next we are going to use the get_ticker, get_start and get_end variables to source the data from messari. We are going to store the pulled data in the variable data_source
+Note we are using the reddit.subscribers API to assess the Reddit Subscribers because it is The number of subscribers on the asset's primary subreddit */
+
+
+var data_source = UrlFetchApp.fetch("https://data.messari.io/api/v1/assets/" + get_ticker +"/metrics/reddit.subscribers/time-series?start=" + get_start + "&interval=1d&end=" + get_end);
+
+// Next we are going to log the data source to check if the data we got was correct.
+
+// Logger.log(" ")
+
+// Logger.log(data_source)
+
+// In the next two steps we are going to retrieve the content of the API then parse it into JSON which would allow us to work on the content of the API.
+
+// First we retrieve the content of the API and store it in the variable data_source_content.
+
+var data_source_content = data_source.getContentText();
+
+// Next we parse the data and store the result in the variable data_source_result.
+
+var data_source_result = JSON.parse(data_source_content);
+
+// Next we are going to check if an array is empty. If it is not empty we continue to  output the data points. If it is empty the function ends here.
+
+if ( data_source_result.data.values != null ) {
+
+// Since we want the data to display in descending order from End Date to Start Date we are going to reverse the order of the result and store the data in the variable data_source_reverse_order
+
+var data_source_reverse_order = data_source_result.data.values.reverse()
+
+// The above function reverses the order of the values array. 
+
+/* The next few steps we are going to start outputting the data in the respective positions on the Model worksheet. We are going to create a variable outer_looper to loop through the outer array.
+That will allow us to get the line by line data. Next we are going to create a red_subs_looper to get the retrieve the Reddit Subscribers data based on the index position in the inner array. 
+The Date is the first in the array so the index position is 0 and since we have already retrieved the date in the callAsset_Price function we are going to ignore this data point. The index position for the Reddit Subscribers data in the inner array is 1.*/
+
+// creating the outer_looper
+
+var outer_looper = 0;
+
+// Looping through the outer array
+ 
+for (outer_looper = 0; outer_looper < data_source_reverse_order.length; outer_looper++) {
+
+// Next we are going to create variables  for the Reddit Subscribers data point to get the respective values from the inner array.
+
+// We are going to start with the Reddit Subscribers , create a variable red_subs_looper.
+
+var red_subs_looper = 1
+
+// Next we are going to output the Reddit Subscribers using the variable red_subs_looper.
+
+if (red_subs_looper === 1) get_model.getRange( outer_looper + 12 ,red_subs_looper+7).setValue(data_source_reverse_order[outer_looper][red_subs_looper]);
+
+
+}
+
+}
+
+// That is the end of this function. 
+
+}
+
+
+
+function callTweet_Count(){
+// This function retrieves the historical Tweet Count for the last 7 days by hour.
+
+// First retrieve the spreadsheet (google sheet) we want to work on. The name of the google sheet is the Crypto Assets Metrics.  
+
+// To do that we first get the active spreadsheet 
+
+var app = SpreadsheetApp;
+
+// Next we get the active google sheet " Crypto Asset Metrics" and stores it in a variable get_active_spreadsheet.
+
+var get_active_spreadsheet = app.getActiveSpreadsheet();
+
+// get the worksheet we will be working on. The name of the worksheet is "Model". Hence we will get the Model worksheet and store it in the variable get_model
+
+var get_model = get_active_spreadsheet.getSheetByName("Model")
+
+// Next we are going to clear the previous data in the range we are going to update
+
+/* The next line clears the data in the range we are working with. The purpose is that before we source the data we are going to clear any data already existing in those rows. 
+This particular line clears the data in the Tweet Count sections of the Model worksheet */
+
+get_model.getRange(12,10,1500,3).clearContent()
+
+/* Next we are going to work on importing the Asset's Tweet Count by calling/ pulling the data from Twitter's "Tweet counts API" 
+Here is a link to the Tweet Counts API web page: https://developer.twitter.com/en/docs/twitter-api/tweets/counts/introduction */
+
+// First we are going to pull the appropriate input's from the input section of the data set. 
+
+/* The data we need inputted from the Model worksheet is the Asset's name and store it in the variable get_name */
+
+var get_name = get_model.getRange("B5").getValue();
+
+// Next use the Logger.log function we are going to log the data type of the Asset Name.
+
+ //Logger.log(get_name)
+
+// Next we are going to use the get_model variables to source the data from Twitter's API. We are going to store the pulled data in the variable data_source.
+
+var data_source = UrlFetchApp.fetch("https://api.twitter.com/2/tweets/counts/recent?query=" + get_name + "&granularity=hour", {'headers' : {'Authorization':'Bearer AAAAAAAAAAAAAAAAAAAAAGZ1YAEAAAAAKr2fgpinqtmCuSIaFdHjalN6s10%3De1mL2JsCsDVXdyaHzxSlZRnNAvfFmViusqtaL2oafJGncCfZzf'}} );
+
+// In the next two steps we are going to retrieve the content of the API then parse it into JSON which would allow us to work on the content of the API.
+
+// First we retrieve the content of the API and store it in the variable data_source_content.
+
+var data_source_content = data_source.getContentText();
+
+// Next we parse the data and store the result in the variable data_source_result.
+
+var data_source_result = JSON.parse(data_source_content);
+
+// Next we are going to check if an array is empty. If it is not empty we continue to  output the data points. If it is empty the function ends here.
+
+if ( data_source_result.data.values != null ) {
+
+// Since we want the data to display in descending order from End Date to Start Date we are going to reverse the order of the result and store the data in the variable data_source_reverse_order
+
+var data_source_reverse_order = data_source_result.data.reverse()
+
+// The above function reverses the order of the values array. 
+
+/* The next few steps we are going to start outputting the data in the respective positions on the Model worksheet. We are going to create a variable outer_looper to loop through the outer array.
+That will allow us to get the line by line data. Next we are going to create End and Count loops to get the respective data based on the index position in the inner array. 
+From the End index to output the Date and Hour values from the same end looper. The End is the first in the array so the index position is 0 and the tweet count index position is 2.
+We are going to ignore the start data which has an index position of 1. To output the End data line we are going to change the format for UTC to Date format. */
+
+// creating the outer_looper
+
+var outer_looper = 0;
+
+// Looping through the outer array
+ 
+for (outer_looper = 1; outer_looper < data_source_reverse_order.length; outer_looper++) {
+
+// Next we are going to create variables for End and Tweet Count data points to get the respective values from the inner array.
+
+// We are going to start with the end, create a variable end_looper
+
+var end_looper = 0
+
+// Next we are going to output the variable in the respect position in the spreadsheet and change the format from timestamp to date.
+
+if (end_looper === 0) {// We are going to create a variable "end" to format the end date into the format the desired date and hour format
+
+                      var end =  new Date( data_source_reverse_order[outer_looper].end)
+
+                      // Next we are going to get the transform the format into the desired date format and store it in the variable end_date
+
+                      var end_date = end.getFullYear()+'-'+(end.getMonth()+1)+'-'+end.getDate()
+
+                      // Next we are going to export the data into the required column. 
+
+                      get_model.getRange( outer_looper + 11 ,end_looper+10).setValue(end_date)
+
+                       // Next we are going to get the transform the format into the desired hour format and store it in the variable end_hour
+
+                      var end_hour = end.getHours()
+
+                      // Next we are going to export the data into the required column. 
+
+                      get_model.getRange( outer_looper + 11 ,end_looper+11).setValue(end_hour)                     
+
+}
+
+// Next we are going to output the the tweet counts. We create a variable count_looper.
+
+var count_looper = 2
+
+// Next we are going to output the variable in the respective position in the spreadsheet.
+
+if ( count_looper === 2) get_model.getRange( outer_looper + 11 , count_looper+10).setValue(data_source_reverse_order[outer_looper].tweet_count) 
+
+
+}
+
+}
+
+// That is the end of this function. 
+
+}
+
+// Here is a link to the spreadsheet: https://docs.google.com/spreadsheets/d/1yytYXuFas26dRRJ5IeYJuSg0qt8IvSh1lwToJmIfoL8/edit#gid=0
